@@ -10,8 +10,9 @@ import javax.persistence.TypedQuery;
 import app.entities.Car;
 
 @Stateless
-public class CarJPA {
+public class CarJPA{
 
+	private static final long serialVersionUID = -927645013890576970L;
 	@PersistenceContext(unitName = "postg")
 	EntityManager em;
 

@@ -3,16 +3,17 @@ package app.jpa;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.ejb.Stateless;
+
 public interface GenericJPA<T> extends Serializable {
 
-	public T getEntityById(Long id, Class<T> clase);
+	T getEntityById(Long id, Class<T> clase);
 
-	public T addEntity(T t);
+	T putEntity(T t);
 
-	public void deleteEntity(Long id);
+	T addEntity(T t);
 
-	public List<T> getAll();
-	
-	public T putEntity(T t);
+	void deleteEntity(Long id);
 
+	List<T> getAll();
 }

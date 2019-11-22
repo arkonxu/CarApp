@@ -1,11 +1,18 @@
 package app.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import app.entities.Car;
+import app.exceptions.DataNotFoundException;
+import app.exceptions.ErrorMessage;
 import app.jpa.CarJPA;
 
 @Stateless
@@ -31,17 +38,20 @@ public class CarService {
 
 	public List<Car> getCarByCountry(String country) {
 		List<Car> carList = jpa.getAll();
+		List<Car> carListCountry = new ArrayList<>();
 		for (Car car : carList) {
 			if (car.getCountry().equalsIgnoreCase(country)) {
-				carList.add(car);
+				carListCountry.add(car);
 			}
 		}
-		return carList;
+		return carListCountry;
 	}
 
 	public Car getCarById(long id) {
-		Car car;
-		car = jpa.getEntityById(id, Car.class);
+		Car car = jpa.getEntityById(id, Car.class);
+		if (car == null) {
+			throw new DataNotFoundException("Not found");
+		}
 		return car;
 	}
 

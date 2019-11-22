@@ -1,5 +1,7 @@
 package app.resources;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -13,7 +15,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
@@ -39,32 +45,29 @@ public class CarResource {
 
 	@GET
 	public List<Car> getAll(@QueryParam("country") String country) {
-		if (country != null) {
+		if (country != null && !country.isEmpty()) {
 			return carService.getCarByCountry(country);
 		}
 		return carService.getAll();
 	}
 
 	@POST
-	public String addCar(Car car) {
+	public Response addCar(Car car, @Context UriInfo uriInfo) throws URISyntaxException {
 		try {
-			carService.addCar(car);
-			return "Se ha añadido correctamente";
+			Car coche = carService.addCar(car);
+			String uri = uriInfo.getAbsolutePath().toString() + coche.getId();
+			logger.info(uriInfo.getAbsolutePath());
+			return Response.created(new URI(uri)).status(Status.CREATED).entity(coche).build();
 		} catch (Exception e) {
 			logger.error(e);
-			return "Ha habido un error al añadir";
+			return Response.status(Status.CONFLICT).build();
 		}
 	}
 
 	@GET
 	@Path("/{carId}")
 	public Car getCarById(@PathParam("carId") long id) {
-		try {
 			return carService.getCarById(id);
-		} catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
 	}
 
 	@PUT
