@@ -28,10 +28,6 @@ public class CarService {
 		return jpa.getAll();
 	}
 
-	public String getMsg(String message) {
-		return "Hola " + message + " !";
-	}
-
 	public Car addCar(Car car) {
 		return jpa.addEntity(car);
 	}
@@ -49,9 +45,6 @@ public class CarService {
 
 	public Car getCarById(long id) {
 		Car car = jpa.getEntityById(id, Car.class);
-		if (car == null) {
-			throw new DataNotFoundException("Not found");
-		}
 		return car;
 	}
 
@@ -62,8 +55,8 @@ public class CarService {
 		return jpa.putEntity(car);
 	}
 
-	public void deleteCar(long id) {
-		jpa.deleteEntity(id);
+	public Car deleteCar(long id) {
+		return jpa.deleteEntity(id);
 	}
 
 }

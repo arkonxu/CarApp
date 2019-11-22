@@ -27,9 +27,10 @@ public class CarJPA{
 		return car;
 	}
 
-	public void deleteEntity(Long id) {
+	public Car deleteEntity(Long id) {
 		Car car = em.find(Car.class, id);
 		em.remove(car);
+		return car;
 	}
 
 	public Car getEntityById(Long id, Class<Car> clase) {

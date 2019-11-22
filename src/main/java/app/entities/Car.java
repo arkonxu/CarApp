@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "cars")
@@ -21,12 +22,14 @@ public class Car implements java.io.Serializable {
 	private long id;
 
 	@Column(name = "brand")
+	@NotNull(message = "Brand cannot be null")
 	private String brand;
 
 	@Column(name = "registration")
 	private Date registration;
 
 	@Column(name = "country")
+	@NotNull(message = "Country cannot be null")
 	private String country;
 
 	@Column(name = "createdAt")
@@ -151,5 +154,11 @@ public class Car implements java.io.Serializable {
 		} else if (!registration.equals(other.registration))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Car [id=" + id + ", brand=" + brand + ", registration=" + registration + ", country=" + country
+				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + "]";
 	}
 }
