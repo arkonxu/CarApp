@@ -1,6 +1,11 @@
 package app.entities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import app.DTO.CarResponse;
 
 @Entity
 @Table(name = "cars")
@@ -21,14 +28,14 @@ public class Car implements java.io.Serializable {
 	@Column(name = "id", nullable = false)
 	private long id;
 
-	@Column(name = "brand")
+	@Column(name = "brand", nullable = false)
 	@NotNull(message = "Brand cannot be null")
 	private String brand;
 
 	@Column(name = "registration")
 	private Date registration;
 
-	@Column(name = "country")
+	@Column(name = "country", nullable = false)
 	@NotNull(message = "Country cannot be null")
 	private String country;
 
@@ -160,5 +167,26 @@ public class Car implements java.io.Serializable {
 	public String toString() {
 		return "Car [id=" + id + ", brand=" + brand + ", registration=" + registration + ", country=" + country
 				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + "]";
+	}
+
+	public static List<Car> mapToEntity(List<CarResponse> carListResponse) throws ParseException {
+
+		Car car;
+		List<Car> carList = new ArrayList<>();
+
+		for (CarResponse carResponse : carListResponse) {
+
+			car = new Car();
+			car.setId(carResponse.getId());
+			car.setBrand(carResponse.getBrand());
+			car.setCountry(carResponse.getCountry());
+			car.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd").parse(carResponse.getCreatedAt()));
+			car.setLastUpdated(new SimpleDateFormat("yyyy-MM-dd").parse(carResponse.getLastUpdated()));
+			car.setRegistration(new SimpleDateFormat("yyyy-MM-dd").parse(carResponse.getRegistration()));
+
+			carList.add(car);
+		}
+
+		return carList;
 	}
 }

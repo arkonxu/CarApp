@@ -1,5 +1,7 @@
 package app.jpa;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -10,7 +12,7 @@ import javax.persistence.TypedQuery;
 import app.entities.Car;
 
 @Stateless
-public class CarJPA{
+public class CarJPA {
 
 	private static final long serialVersionUID = -927645013890576970L;
 	@PersistenceContext(unitName = "postg")
@@ -23,6 +25,11 @@ public class CarJPA{
 	}
 
 	public Car addEntity(Car car) {
+		Date createdAt, lastUpdated;
+		lastUpdated = Calendar.getInstance().getTime();
+		createdAt = Calendar.getInstance().getTime();
+		car.setCreatedAt(createdAt);
+		car.setLastUpdated(lastUpdated);
 		em.persist(car);
 		return car;
 	}

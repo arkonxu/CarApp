@@ -1,18 +1,14 @@
 package app.services;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
+import app.DTO.CarResponse;
 import app.entities.Car;
-import app.exceptions.DataNotFoundException;
-import app.exceptions.ErrorMessage;
 import app.jpa.CarJPA;
 
 @Stateless
@@ -24,19 +20,26 @@ public class CarService {
 	public CarService() {
 	}
 
-	public List<Car> getAll() {
-		return jpa.getAll();
+	public List<CarResponse> getAll() {
+		List<Car> carList = jpa.getAll();
+		List<CarResponse> carResponseList = CarResponse.mapToResponse(carList);
+		return carResponseList;
 	}
 
-	public Car addCar(Car car) {
+	public Car addCar(Car car) throws ParseException {
+//		List<CarResponse> carListResponse = new ArrayList<>();
+//		
+//		List<Car> carList = Car.mapToEntity(carListResponse);
+//		
+//		return jpa.addEntity(carList.get(0));
 		return jpa.addEntity(car);
 	}
 
-	public List<Car> getCarByCountry(String country) {
-		List<Car> carList = jpa.getAll();
-		List<Car> carListCountry = new ArrayList<>();
-		for (Car car : carList) {
-			if (car.getCountry().equalsIgnoreCase(country)) {
+	public List<CarResponse> getCarByCountry(String country) {
+		List<CarResponse> carList = CarResponse.mapToResponse(jpa.getAll());
+		List<CarResponse> carListCountry = new ArrayList<>();
+		for (CarResponse car : carList) {
+			if (country.equalsIgnoreCase(car.getCountry())) {
 				carListCountry.add(car);
 			}
 		}

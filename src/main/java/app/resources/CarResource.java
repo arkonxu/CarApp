@@ -2,6 +2,7 @@ package app.resources;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
+import app.DTO.CarResponse;
 import app.entities.Car;
 import app.exceptions.DataNotFoundException;
 import app.exceptions.EmptyBodyException;
@@ -43,26 +45,28 @@ public class CarResource {
 
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
-		List<Car> carList = new ArrayList<>();
-		if (country != null && !country.isEmpty()) {
-			carList = carService.getCarByCountry(country);
-			if (carList == null | carList.isEmpty()) {
+		List<CarResponse> carResponseList = new ArrayList<>();
+		logger.info("COUNTRY : " + country);
+		if (country!=null && !country.isEmpty()) {
+			carResponseList = carService.getCarByCountry(country);
+			if (carResponseList == null | carResponseList.isEmpty()) {
+				logger.info("CAR RESPONSE LIST BY COUNTRY: " + carResponseList);
 				throw new DataNotFoundException("Not found");
 			}
-			return Response.status(Status.FOUND).entity(carList).build();
+			logger.info("CAR RESPONSE LIST BY COUNTRY: " + carResponseList);
+			return Response.status(Status.OK).entity(carResponseList).build();
+		} else {
+			carResponseList = carService.getAll();
+			if (carResponseList == null | carResponseList.isEmpty()) {
+				throw new DataNotFoundException("Not found");
+			}
+			logger.info("CAR RESPONSE LIST: " + carResponseList);
+			return Response.status(Status.OK).entity(carResponseList).build();
 		}
-		carList = carService.getAll();
-		if (carList == null | carList.isEmpty()) {
-			throw new DataNotFoundException("Not found");
-		}
-		return Response.status(Status.FOUND).entity(carList).build();
 	}
 
 	@POST
-	public Response addCar(Car car, @Context UriInfo uriInfo) throws URISyntaxException {
-		if (car.getBrand() == null || car.getCountry() == null || car == null) {
-			throw new EmptyBodyException("Body was empty");
-		}
+	public Response addCar(@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException, ParseException {
 		Car newCar = carService.addCar(car);
 		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
 		return Response.created(new URI(uri)).status(Status.CREATED).entity(newCar).build();
@@ -75,7 +79,7 @@ public class CarResource {
 		if (car == null) {
 			throw new DataNotFoundException("Not found");
 		}
-		return Response.status(Status.FOUND).entity(car).build();
+		return Response.status(Status.OK).entity(car).build();
 	}
 
 	@PUT
@@ -94,7 +98,7 @@ public class CarResource {
 	@Path("/{carId}")
 	public Response deleteCar(@PathParam("carId") long id) {
 		Car carToDelete = carService.deleteCar(id);
-		return Response.status(Status.ACCEPTED).entity(carToDelete).build();
+		return Response.status(Status.OK).entity(carToDelete).build();
 	}
 
 }
