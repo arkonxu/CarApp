@@ -47,5 +47,11 @@ public class CarJPA {
 	public Car putEntity(Car car) {
 		return em.merge(car);
 	}
+	
+	public List<Car> getCarByCountry(String country) {
+		String query = "SELECT d FROM Car d WHERE UPPER(country) = '" + country.toUpperCase() + "'";
+		TypedQuery<Car> createQuery = em.createQuery(query, Car.class);
+		return createQuery.getResultList();
+	}
 
 }

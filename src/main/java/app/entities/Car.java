@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import app.DTO.CarResponse;
+import app.DTO.CarDTO;
 
 @Entity
 @Table(name = "cars")
@@ -169,20 +169,20 @@ public class Car implements java.io.Serializable {
 				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + "]";
 	}
 
-	public static List<Car> mapToEntity(List<CarResponse> carListResponse) throws ParseException {
+	public static List<Car> mapToEntity(List<CarDTO> carListResponse) throws ParseException {
 
 		Car car;
 		List<Car> carList = new ArrayList<>();
 
-		for (CarResponse carResponse : carListResponse) {
+		for (CarDTO CarDTO : carListResponse) {
 
 			car = new Car();
-			car.setId(carResponse.getId());
-			car.setBrand(carResponse.getBrand());
-			car.setCountry(carResponse.getCountry());
-			car.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd").parse(carResponse.getCreatedAt()));
-			car.setLastUpdated(new SimpleDateFormat("yyyy-MM-dd").parse(carResponse.getLastUpdated()));
-			car.setRegistration(new SimpleDateFormat("yyyy-MM-dd").parse(carResponse.getRegistration()));
+			car.setId(CarDTO.getId());
+			car.setBrand(CarDTO.getBrand());
+			car.setCountry(CarDTO.getCountry());
+			car.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd").parse(CarDTO.getCreatedAt()));
+			car.setLastUpdated(new SimpleDateFormat("yyyy-MM-dd").parse(CarDTO.getLastUpdated()));
+			car.setRegistration(new SimpleDateFormat("yyyy-MM-dd").parse(CarDTO.getRegistration()));
 
 			carList.add(car);
 		}

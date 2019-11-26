@@ -26,7 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.log4j.Logger;
 
-import app.DTO.CarResponse;
+import app.DTO.CarDTO;
 import app.entities.Car;
 import app.exceptions.DataNotFoundException;
 import app.exceptions.EmptyBodyException;
@@ -45,23 +45,23 @@ public class CarResource {
 
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
-		List<CarResponse> carResponseList = new ArrayList<>();
+		List<CarDTO> CarDTOList = new ArrayList<>();
 		logger.info("COUNTRY : " + country);
 		if (country!=null && !country.isEmpty()) {
-			carResponseList = carService.getCarByCountry(country);
-			if (carResponseList == null | carResponseList.isEmpty()) {
-				logger.info("CAR RESPONSE LIST BY COUNTRY: " + carResponseList);
+			CarDTOList = carService.getCarByCountry(country);
+			if (CarDTOList == null | CarDTOList.isEmpty()) {
+				logger.info("CAR RESPONSE LIST BY COUNTRY: " + CarDTOList);
 				throw new DataNotFoundException("Not found");
 			}
-			logger.info("CAR RESPONSE LIST BY COUNTRY: " + carResponseList);
-			return Response.status(Status.OK).entity(carResponseList).build();
+			logger.info("CAR RESPONSE LIST BY COUNTRY: " + CarDTOList);
+			return Response.status(Status.OK).entity(CarDTOList).build();
 		} else {
-			carResponseList = carService.getAll();
-			if (carResponseList == null | carResponseList.isEmpty()) {
+			CarDTOList = carService.getAll();
+			if (CarDTOList == null | CarDTOList.isEmpty()) {
 				throw new DataNotFoundException("Not found");
 			}
-			logger.info("CAR RESPONSE LIST: " + carResponseList);
-			return Response.status(Status.OK).entity(carResponseList).build();
+			logger.info("CAR RESPONSE LIST: " + CarDTOList);
+			return Response.status(Status.OK).entity(CarDTOList).build();
 		}
 	}
 

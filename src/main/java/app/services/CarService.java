@@ -7,7 +7,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
-import app.DTO.CarResponse;
+import app.DTO.CarDTO;
 import app.entities.Car;
 import app.jpa.CarJPA;
 
@@ -20,14 +20,14 @@ public class CarService {
 	public CarService() {
 	}
 
-	public List<CarResponse> getAll() {
+	public List<CarDTO> getAll() {
 		List<Car> carList = jpa.getAll();
-		List<CarResponse> carResponseList = CarResponse.mapToResponse(carList);
-		return carResponseList;
+		List<CarDTO> CarDTOList = CarDTO.mapToResponse(carList);
+		return CarDTOList;
 	}
 
 	public Car addCar(Car car) throws ParseException {
-//		List<CarResponse> carListResponse = new ArrayList<>();
+//		List<CarDTO> carListResponse = new ArrayList<>();
 //		
 //		List<Car> carList = Car.mapToEntity(carListResponse);
 //		
@@ -35,15 +35,10 @@ public class CarService {
 		return jpa.addEntity(car);
 	}
 
-	public List<CarResponse> getCarByCountry(String country) {
-		List<CarResponse> carList = CarResponse.mapToResponse(jpa.getAll());
-		List<CarResponse> carListCountry = new ArrayList<>();
-		for (CarResponse car : carList) {
-			if (country.equalsIgnoreCase(car.getCountry())) {
-				carListCountry.add(car);
-			}
-		}
-		return carListCountry;
+	public List<CarDTO> getCarByCountry(String country) {
+		List<CarDTO> carList = CarDTO.mapToResponse(jpa.getCarByCountry(country));
+
+		return carList;
 	}
 
 	public Car getCarById(long id) {
