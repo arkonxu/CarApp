@@ -75,7 +75,7 @@ public class CarResource {
 	@Path("/{carId}")
 	public Response deleteCar(@PathParam("carId") long id) {
 		Car carToDelete = carService.deleteCar(id);
-		return Response.status(Status.NO_CONTENT).entity(carToDelete).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 }
