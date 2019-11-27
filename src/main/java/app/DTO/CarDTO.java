@@ -85,13 +85,10 @@ public class CarDTO {
 			carDTO.setId(car.getId());
 			carDTO.setBrand(car.getBrand());
 			carDTO.setCountry(car.getCountry());
-			carDTO.setCreatedAt((car.getCreatedAt() == null) ? null
-					/* LocalDateTime.now().toString() */ : car.getCreatedAt().toString());
-			carDTO.setLastUpdated((car.getLastUpdated() == null) ? null
-					/* LocalDateTime.now().toString() */ : car.getLastUpdated().toString());
+			carDTO.setCreatedAt((car.getCreatedAt() == null) ? null : car.getCreatedAt().toString());
+			carDTO.setLastUpdated((car.getLastUpdated() == null) ? null : car.getLastUpdated().toString());
 
-			carDTO.setRegistration((car.getRegistration() == null) ? null
-					/* LocalDateTime.now().toString() */ : car.getRegistration().toString());
+			carDTO.setRegistration((car.getRegistration() == null) ? null : car.getRegistration().toString());
 
 			carDTOList.add(carDTO);
 		}
