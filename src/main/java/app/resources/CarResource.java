@@ -1,9 +1,14 @@
 package app.resources;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,10 +18,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
-import org.apache.log4j.Logger;
-
+import app.DTO.CarDTO;
 import app.entities.Car;
 import app.services.CarService;
 
@@ -29,67 +37,45 @@ public class CarResource {
 	@EJB
 	private CarService carService;
 
-	final static Logger logger = Logger.getLogger(CarResource.class);
-
 	@GET
-	@Path("/hola/{param}")
-	public String getMsg(@PathParam("param") String message) {
-		return carService.getMsg(message);
-	}
-
-	@GET
-	public List<Car> getAll(@QueryParam("country") String country) {
-		if (country != null) {
-			return carService.getCarByCountry(country);
+	public Response getAll(@QueryParam("country") String country) {
+		List<CarDTO> CarDTOList = new ArrayList<>();
+		if (country != null && !country.isEmpty()) {
+			CarDTOList = carService.getCarByCountry(country);
+			return Response.status(Status.OK).entity(CarDTOList).build();
+		} else {
+			CarDTOList = carService.getAll();
+			return Response.status(Status.OK).entity(CarDTOList).build();
 		}
-		return carService.getAll();
 	}
 
 	@POST
-	public String addCar(Car car) {
-		try {
-			carService.addCar(car);
-			return "Se ha añadido correctamente";
-		} catch (Exception e) {
-			logger.error(e);
-			return "Ha habido un error al añadir";
-		}
+	public Response addCar(@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException, ParseException {
+		Car newCar = carService.addCar(car);
+		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(newCar).build();
 	}
 
 	@GET
 	@Path("/{carId}")
-	public Car getCarById(@PathParam("carId") long id) {
-		try {
-			return carService.getCarById(id);
-		} catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
+	public Response getCarById(@PathParam("carId") long id) {
+		CarDTO carDTO = carService.getCarById(id);
+		return Response.status(Status.OK).entity(carDTO).build();
 	}
 
 	@PUT
 	@Path("/{carId}")
-	public String putCar(@PathParam("carId") long id, Car car) {
-		try {
-			car.setId(id);
-			carService.putCar(id, car);
-			return "Se ha actualizado correctamente";
-		} catch (Exception e) {
-			logger.error(e);
-			return "Ha habido un error al actualizar";
-		}
+	public Response putCar(@PathParam("carId") long id, Car car, @Context UriInfo uriInfo) throws URISyntaxException {
+		Car newCar = carService.putCar(id, car);
+		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(carService.putCar(id, car)).build();
 	}
 
 	@DELETE
 	@Path("/{carId}")
-	public String deleteCar(@PathParam("carId") long id) {
-		try {
-			carService.deleteCar(id);
-			return "Se ha borrado correctamente";
-		} catch (Exception e) {
-			logger.error(e);
-			return "Ha habido un error al eliminar";
-		}
+	public Response deleteCar(@PathParam("carId") long id) {
+		Car carToDelete = carService.deleteCar(id);
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 }

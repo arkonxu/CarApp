@@ -12,6 +12,7 @@ import app.entities.Car;
 @Stateless
 public class CarJPA {
 
+	private static final long serialVersionUID = -927645013890576970L;
 	@PersistenceContext(unitName = "postg")
 	EntityManager em;
 
@@ -26,17 +27,24 @@ public class CarJPA {
 		return car;
 	}
 
-	public void deleteEntity(Long id) {
+	public Car deleteEntity(Long id) {
 		Car car = em.find(Car.class, id);
 		em.remove(car);
+		return car;
 	}
 
-	public Car getEntityById(Long id, Class<Car> clase) {
-		return em.find(clase, id);
+	public Car getEntityById(Long id) {
+		return em.find(Car.class, id);
 	}
 
 	public Car putEntity(Car car) {
 		return em.merge(car);
+	}
+
+	public List<Car> getCarByCountry(String country) {
+		String query = "SELECT d FROM Car d WHERE UPPER(country) = '" + country.toUpperCase() + "'";
+		TypedQuery<Car> createQuery = em.createQuery(query, Car.class);
+		return createQuery.getResultList();
 	}
 
 }

@@ -1,13 +1,21 @@
 package app.entities;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import app.DTO.CarDTO;
 
 @Entity
 @Table(name = "cars")
@@ -20,25 +28,28 @@ public class Car implements java.io.Serializable {
 	@Column(name = "id", nullable = false)
 	private long id;
 
-	@Column(name = "brand")
+	@Column(name = "brand", nullable = false)
+	@NotNull(message = "Brand cannot be null")
 	private String brand;
 
 	@Column(name = "registration")
-	private Date registration;
+	private LocalDateTime registration;
 
-	@Column(name = "country")
+	@Column(name = "country", nullable = false)
+	@NotNull(message = "Country cannot be null")
 	private String country;
 
 	@Column(name = "createdAt")
-	private Date createdAt;
+	private LocalDateTime createdAt;
 
 	@Column(name = "lastUpdated")
-	private Date lastUpdated;
+	private LocalDateTime lastUpdated;
 
 	public Car() {
 	}
 
-	public Car(long id, String brand, String country, Date registration, Date createdAt, Date lastUpdated) {
+	public Car(long id, String brand, String country, LocalDateTime registration, LocalDateTime createdAt,
+			LocalDateTime lastUpdated) {
 		this.id = id;
 		this.brand = brand;
 		this.registration = registration;
@@ -51,6 +62,17 @@ public class Car implements java.io.Serializable {
 		this.id = id;
 		this.brand = brand;
 		this.country = country;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		createdAt = LocalDateTime.now();
+		lastUpdated = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	public void preUpdate() {
+		lastUpdated = LocalDateTime.now();
 	}
 
 	public long getId() {
@@ -69,11 +91,11 @@ public class Car implements java.io.Serializable {
 		this.brand = brand;
 	}
 
-	public Date getRegistration() {
+	public LocalDateTime getRegistration() {
 		return this.registration;
 	}
 
-	public void setRegistration(Date registration) {
+	public void setRegistration(LocalDateTime registration) {
 		this.registration = registration;
 	}
 
@@ -85,19 +107,19 @@ public class Car implements java.io.Serializable {
 		this.country = country;
 	}
 
-	public Date getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return this.createdAt;
 	}
 
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public Date getLastUpdated() {
+	public LocalDateTime getLastUpdated() {
 		return this.lastUpdated;
 	}
 
-	public void setLastUpdated(Date lastUpdated) {
+	public void setLastUpdated(LocalDateTime lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
 
@@ -151,5 +173,52 @@ public class Car implements java.io.Serializable {
 		} else if (!registration.equals(other.registration))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Car [id=" + id + ", brand=" + brand + ", registration=" + registration + ", country=" + country
+				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + "]";
+	}
+
+	public static List<Car> mapToEntityList(List<CarDTO> carListResponse) throws ParseException {
+
+		Car car;
+		List<Car> carList = new ArrayList<>();
+
+		for (CarDTO CarDTO : carListResponse) {
+
+			car = new Car();
+			car.setId(CarDTO.getId());
+			car.setBrand(CarDTO.getBrand());
+			car.setCountry(CarDTO.getCountry());
+			LocalDateTime dateCreatedAt = LocalDateTime.parse(CarDTO.getCreatedAt());
+			car.setCreatedAt(dateCreatedAt);
+			LocalDateTime dateLastUpdated = LocalDateTime.parse(CarDTO.getLastUpdated());
+			car.setLastUpdated(dateLastUpdated);
+			LocalDateTime dateRegistration = LocalDateTime.parse(CarDTO.getRegistration());
+			car.setRegistration(dateRegistration);
+			carList.add(car);
+		}
+
+		return carList;
+	}
+
+	public static Car mapToEntity(CarDTO carDTO) throws ParseException {
+
+		Car car;
+
+		car = new Car();
+		car.setId(carDTO.getId());
+		car.setBrand(carDTO.getBrand());
+		car.setCountry(carDTO.getCountry());
+		LocalDateTime dateCreatedAt = LocalDateTime.parse(carDTO.getCreatedAt());
+		car.setCreatedAt(dateCreatedAt);
+		LocalDateTime dateLastUpdated = LocalDateTime.parse(carDTO.getLastUpdated());
+		car.setLastUpdated(dateLastUpdated);
+		LocalDateTime dateRegistration = LocalDateTime.parse(carDTO.getRegistration());
+		car.setRegistration(dateRegistration);
+
+		return car;
 	}
 }
