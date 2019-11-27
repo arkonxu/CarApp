@@ -24,12 +24,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.log4j.Logger;
-
 import app.DTO.CarDTO;
 import app.entities.Car;
-import app.exceptions.DataNotFoundException;
-import app.exceptions.EmptyBodyException;
 import app.services.CarService;
 
 @Stateless
@@ -41,26 +37,14 @@ public class CarResource {
 	@EJB
 	private CarService carService;
 
-	final static Logger logger = Logger.getLogger(CarResource.class);
-
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
 		List<CarDTO> CarDTOList = new ArrayList<>();
-		logger.info("COUNTRY : " + country);
-		if (country!=null && !country.isEmpty()) {
+		if (country != null && !country.isEmpty()) {
 			CarDTOList = carService.getCarByCountry(country);
-			if (CarDTOList == null | CarDTOList.isEmpty()) {
-				logger.info("CAR RESPONSE LIST BY COUNTRY: " + CarDTOList);
-				throw new DataNotFoundException("Not found");
-			}
-			logger.info("CAR RESPONSE LIST BY COUNTRY: " + CarDTOList);
 			return Response.status(Status.OK).entity(CarDTOList).build();
 		} else {
 			CarDTOList = carService.getAll();
-			if (CarDTOList == null | CarDTOList.isEmpty()) {
-				throw new DataNotFoundException("Not found");
-			}
-			logger.info("CAR RESPONSE LIST: " + CarDTOList);
 			return Response.status(Status.OK).entity(CarDTOList).build();
 		}
 	}
@@ -75,30 +59,23 @@ public class CarResource {
 	@GET
 	@Path("/{carId}")
 	public Response getCarById(@PathParam("carId") long id) {
-		Car car = carService.getCarById(id);
-		if (car == null) {
-			throw new DataNotFoundException("Not found");
-		}
-		return Response.status(Status.OK).entity(car).build();
+		CarDTO carDTO = carService.getCarById(id);
+		return Response.status(Status.OK).entity(carDTO).build();
 	}
 
 	@PUT
 	@Path("/{carId}")
 	public Response putCar(@PathParam("carId") long id, Car car, @Context UriInfo uriInfo) throws URISyntaxException {
-		car.setId(id);
-		if (car.getBrand() == null || car.getCountry() == null || car == null) {
-			throw new EmptyBodyException("Body was empty.");
-		}
 		Car newCar = carService.putCar(id, car);
 		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
-		return Response.created(new URI(uri)).status(Status.CREATED).entity(newCar).build();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(carService.putCar(id, car)).build();
 	}
 
 	@DELETE
 	@Path("/{carId}")
 	public Response deleteCar(@PathParam("carId") long id) {
 		Car carToDelete = carService.deleteCar(id);
-		return Response.status(Status.OK).entity(carToDelete).build();
+		return Response.status(Status.NO_CONTENT).entity(carToDelete).build();
 	}
 
 }

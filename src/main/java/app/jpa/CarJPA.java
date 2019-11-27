@@ -1,7 +1,5 @@
 package app.jpa;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -25,11 +23,6 @@ public class CarJPA {
 	}
 
 	public Car addEntity(Car car) {
-		Date createdAt, lastUpdated;
-		lastUpdated = Calendar.getInstance().getTime();
-		createdAt = Calendar.getInstance().getTime();
-		car.setCreatedAt(createdAt);
-		car.setLastUpdated(lastUpdated);
 		em.persist(car);
 		return car;
 	}
@@ -40,14 +33,14 @@ public class CarJPA {
 		return car;
 	}
 
-	public Car getEntityById(Long id, Class<Car> clase) {
-		return em.find(clase, id);
+	public Car getEntityById(Long id) {
+		return em.find(Car.class, id);
 	}
 
 	public Car putEntity(Car car) {
 		return em.merge(car);
 	}
-	
+
 	public List<Car> getCarByCountry(String country) {
 		String query = "SELECT d FROM Car d WHERE UPPER(country) = '" + country.toUpperCase() + "'";
 		TypedQuery<Car> createQuery = em.createQuery(query, Car.class);

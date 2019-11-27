@@ -1,6 +1,5 @@
 package app.DTO;
 
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,34 +74,53 @@ public class CarDTO {
 		this.registration = registration;
 	}
 
-	public static List<CarDTO> mapToResponse(List<Car> carList) {
+	public static List<CarDTO> mapToResponseList(List<Car> carList) {
 
-		CarDTO CarDTO;
-		List<CarDTO> CarDTOList = new ArrayList<>();
+		CarDTO carDTO;
+		List<CarDTO> carDTOList = new ArrayList<>();
 
 		for (Car car : carList) {
 
-			CarDTO = new CarDTO();
-			CarDTO.setId(car.getId());
-			CarDTO.setBrand(car.getBrand());
-			CarDTO.setCountry(car.getCountry());
-			CarDTO.setCreatedAt(
-					car.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
-			CarDTO.setLastUpdated(
-					car.getLastUpdated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
+			carDTO = new CarDTO();
+			carDTO.setId(car.getId());
+			carDTO.setBrand(car.getBrand());
+			carDTO.setCountry(car.getCountry());
+			carDTO.setCreatedAt((car.getCreatedAt() == null) ? null
+					/* LocalDateTime.now().toString() */ : car.getCreatedAt().toString());
+			carDTO.setLastUpdated((car.getLastUpdated() == null) ? null
+					/* LocalDateTime.now().toString() */ : car.getLastUpdated().toString());
 
-			CarDTO.setRegistration((car.getRegistration() == null) ? null
-					: car.getRegistration().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
+			carDTO.setRegistration((car.getRegistration() == null) ? null
+					/* LocalDateTime.now().toString() */ : car.getRegistration().toString());
 
-			CarDTOList.add(CarDTO);
+			carDTOList.add(carDTO);
 		}
 
-		return CarDTOList;
+		return carDTOList;
+	}
+
+	public static CarDTO mapToResponse(Car car) {
+
+		CarDTO carDTO;
+
+		carDTO = new CarDTO();
+		carDTO.setId(car.getId());
+		carDTO.setBrand(car.getBrand());
+		carDTO.setCountry(car.getCountry());
+		carDTO.setCreatedAt((car.getCreatedAt() == null) ? null
+				/* LocalDateTime.now().toString() */ : car.getCreatedAt().toString());
+		carDTO.setLastUpdated((car.getLastUpdated() == null) ? null
+				/* LocalDateTime.now().toString() */ : car.getLastUpdated().toString());
+
+		carDTO.setRegistration((car.getRegistration() == null) ? null
+				/* LocalDateTime.now().toString() */ : car.getRegistration().toString());
+
+		return carDTO;
 	}
 
 	@Override
 	public String toString() {
-		return "CarDTO [id=" + id + ", brand=" + brand + ", country=" + country + ", createdAt=" + createdAt
+		return "carDTO [id=" + id + ", brand=" + brand + ", country=" + country + ", createdAt=" + createdAt
 				+ ", lastUpdated=" + lastUpdated + ", registration=" + registration + ", links=" + links + "]";
 	}
 
