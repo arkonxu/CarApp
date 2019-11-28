@@ -8,9 +8,6 @@ import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import app.entities.Car;
 import app.exceptions.DataNotFoundException;
 
