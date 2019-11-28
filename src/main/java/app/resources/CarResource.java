@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import app.DTO.CarDTO;
 import app.entities.Car;
+import app.jms.JMSSender;
 import app.services.CarService;
 
 @Stateless
@@ -36,6 +37,9 @@ public class CarResource {
 
 	@EJB
 	private CarService carService;
+	
+	@EJB 
+	private JMSSender sender;
 
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
@@ -74,8 +78,15 @@ public class CarResource {
 	@DELETE
 	@Path("/{carId}")
 	public Response deleteCar(@PathParam("carId") long id) {
-		Car carToDelete = carService.deleteCar(id);
+		carService.deleteCar(id);
 		return Response.status(Status.NO_CONTENT).build();
+	}
+	
+	@POST
+	@Path("/sendObject")
+	public Response sendObject(@Valid Car car) {
+		sender.sendMessage(car);
+		return Response.status(Status.CREATED).entity(car).build();
 	}
 
 }
