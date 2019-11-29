@@ -39,6 +39,7 @@ public class JMSSender {
 
 		} catch (JMSException | DataNotFoundException e) {
 			logger.warn("Error in the sender JMS: " + e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -47,7 +48,7 @@ public class JMSSender {
 				final Session session = connection.createSession(true, 0);) {
 
 			TextMessage message = (TextMessage) session.createTextMessage();
-			
+
 			message.setLongProperty("id", id);
 
 			MessageProducer producer = session.createProducer(queue);
@@ -55,7 +56,7 @@ public class JMSSender {
 			producer.send(message);
 
 		} catch (JMSException | DataNotFoundException e) {
-			throw new DataNotFoundException("Not found");
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -64,7 +65,7 @@ public class JMSSender {
 				final Session session = connection.createSession(true, 0);) {
 
 			ObjectMessage message = (ObjectMessage) session.createObjectMessage(car);
-			
+
 			message.setLongProperty("id", id);
 
 			MessageProducer producer = session.createProducer(queue);
@@ -72,9 +73,7 @@ public class JMSSender {
 			producer.send(message);
 
 		} catch (JMSException | DataNotFoundException e) {
-			if (e.getClass().equals(DataNotFoundException.class)) {
-				throw new DataNotFoundException("Not found");
-			}
+			logger.error(e.getMessage());
 		}
 	}
 }

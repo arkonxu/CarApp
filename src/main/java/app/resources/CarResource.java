@@ -26,7 +26,6 @@ import javax.ws.rs.core.UriInfo;
 
 import app.DTO.CarDTO;
 import app.entities.Car;
-import app.jms.JMSSender;
 import app.services.CarService;
 
 @Stateless
@@ -37,9 +36,6 @@ public class CarResource {
 
 	@EJB
 	private CarService carService;
-	
-	@EJB 
-	private JMSSender sender;
 
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
@@ -69,7 +65,7 @@ public class CarResource {
 
 	@PUT
 	@Path("/{carId}")
-	public Response putCar(@PathParam("carId") long id, Car car, @Context UriInfo uriInfo) throws URISyntaxException {
+	public Response putCar(@PathParam("carId") long id,@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException {
 		Car newCar = carService.putCar(id, car);
 		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
 		return Response.created(new URI(uri)).status(Status.CREATED).entity(carService.putCar(id, car)).build();

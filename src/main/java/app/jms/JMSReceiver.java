@@ -30,33 +30,37 @@ public class JMSReceiver implements MessageListener {
 		Car car;
 		ObjectMessage object;
 		long id;
-
+		logger.info("A MESSAGE HAS BEEN RECEIVED");
+		
 		try {
 
 			switch (message.getStringProperty("action")) {
 
 			case "add":
+				logger.info("THE MESSAGE TELLS TO : " + message.getStringProperty("action"));
 				object = (ObjectMessage) message;
 				car = object.getBody(Car.class);
-				logger.info("CAR: " + car);
 				carService.addCar(car);
 				break;
 
 			case "delete":
+				logger.info("THE MESSAGE TELLS TO : " + message.getStringProperty("action"));
 				TextMessage idMessage = (TextMessage) message;
 				id = idMessage.getLongProperty("id");
 				carService.deleteCar(id);
 				break;
 
 			case "update":
+				logger.info("THE MESSAGE TELLS TO : " + message.getStringProperty("action"));
 				object = (ObjectMessage) message;
 				car = object.getBody(Car.class);
 				id = message.getLongProperty("id");
 				carService.putCar(id, car);
 				break;
 			}
+
 		} catch (JMSException | DataNotFoundException | ParseException e) {
-			throw new DataNotFoundException("Not found");
+			logger.error(e.getMessage());
 		}
 
 	}
