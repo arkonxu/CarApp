@@ -65,7 +65,7 @@ public class CarResource {
 
 	@PUT
 	@Path("/{carId}")
-	public Response putCar(@PathParam("carId") long id, Car car, @Context UriInfo uriInfo) throws URISyntaxException {
+	public Response putCar(@PathParam("carId") long id,@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException {
 		Car newCar = carService.putCar(id, car);
 		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
 		return Response.created(new URI(uri)).status(Status.CREATED).entity(carService.putCar(id, car)).build();
@@ -74,7 +74,7 @@ public class CarResource {
 	@DELETE
 	@Path("/{carId}")
 	public Response deleteCar(@PathParam("carId") long id) {
-		Car carToDelete = carService.deleteCar(id);
+		carService.deleteCar(id);
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
