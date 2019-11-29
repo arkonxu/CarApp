@@ -91,16 +91,4 @@ public class BrandResource {
 			return "Ha habido un error al eliminar";
 		}
 	}
-
-	@GET
-	@Path("/{brandId}/cars")
-	public CarResource getCarByBrand(@PathParam("brandId") long id) {
-		try {
-			return new CarResource();
-		} catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
-	}
-
 }
