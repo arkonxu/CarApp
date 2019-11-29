@@ -81,12 +81,5 @@ public class CarResource {
 		carService.deleteCar(id);
 		return Response.status(Status.NO_CONTENT).build();
 	}
-	
-	@POST
-	@Path("/sendObject")
-	public Response sendObject(@Valid Car car) {
-		sender.sendMessage(car);
-		return Response.status(Status.CREATED).entity(car).build();
-	}
 
 }
