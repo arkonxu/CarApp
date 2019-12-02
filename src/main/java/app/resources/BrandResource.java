@@ -32,12 +32,6 @@ public class BrandResource {
 	final static Logger logger = Logger.getLogger(BrandResource.class);
 
 	@GET
-	@Path("/hola/{param}")
-	public String getMsg(@PathParam("param") String message) {
-		return brandService.getMsg(message);
-	}
-
-	@GET
 	public List<Brand> getAll(@QueryParam("country") String country) {
 		if (country != null) {
 			return brandService.getBrandByCountry(country);

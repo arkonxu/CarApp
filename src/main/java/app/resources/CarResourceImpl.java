@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -32,7 +33,8 @@ import app.services.CarService;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("cars")
-public class CarResourceImpl {
+@LocalBean
+public class CarResourceImpl implements CarResource{
 
 	@EJB
 	private CarService carService;
@@ -65,7 +67,8 @@ public class CarResourceImpl {
 
 	@PUT
 	@Path("/{carId}")
-	public Response putCar(@PathParam("carId") long id,@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException {
+	public Response putCar(@PathParam("carId") long id, @Valid Car car, @Context UriInfo uriInfo)
+			throws URISyntaxException {
 		Car newCar = carService.putCar(id, car);
 		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
 		return Response.created(new URI(uri)).status(Status.CREATED).entity(carService.putCar(id, car)).build();
