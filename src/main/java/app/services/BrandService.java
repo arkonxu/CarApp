@@ -21,10 +21,6 @@ public class BrandService {
 		return jpa.getAll();
 	}
 
-	public String getMsg(String message) {
-		return "Hola " + message + " !";
-	}
-
 	public Brand addBrand(Brand brand) {
 		return jpa.addEntity(brand);
 	}
