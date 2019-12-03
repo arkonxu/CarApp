@@ -2,7 +2,7 @@ package app.DTO;
 
 import javax.validation.constraints.NotNull;
 
-public class CarDTO {
+public class MotoDTO {
 
 	private long id;
 
@@ -68,7 +68,7 @@ public class CarDTO {
 
 	@Override
 	public String toString() {
-		return "carDTO [id=" + id + ", brand=" + brand + ", country=" + country + ", createdAt=" + createdAt
+		return "motoDTO [id=" + id + ", brand=" + brand + ", country=" + country + ", createdAt=" + createdAt
 				+ ", lastUpdated=" + lastUpdated + ", registration=" + registration + "]";
 	}
 

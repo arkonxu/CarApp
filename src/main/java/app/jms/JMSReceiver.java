@@ -1,7 +1,5 @@
 package app.jms;
 
-import java.text.ParseException;
-
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.jms.JMSException;
@@ -59,7 +57,7 @@ public class JMSReceiver implements MessageListener {
 				break;
 			}
 
-		} catch (JMSException | DataNotFoundException | ParseException e) {
+		} catch (JMSException | DataNotFoundException e) {
 			logger.error(e.getMessage());
 		}
 

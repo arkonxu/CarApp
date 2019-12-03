@@ -22,11 +22,11 @@ public interface CarResource {
 	@Operation(summary = "Get all cars", description = "Retrieves all the cars from the DB", responses = {
 			@ApiResponse(description = "Cars", responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Car.class)))), })
 	public Response getAll(@QueryParam("country") String country);
-	
+
 	@Operation(summary = "Add new car", description = "Add a new car to the DB", responses = {
 			@ApiResponse(description = "Created", responseCode = "201", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Car.class)))), })
 	public Response addCar(@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException, ParseException;
-	
+
 	@Operation(summary = "Get car filtering by ID", description = "Retrieves a car filtered by ID from the DB", responses = {
 			@ApiResponse(description = "Car", responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Car.class)))), })
 	public Response getCarById(@PathParam("carId") long id);

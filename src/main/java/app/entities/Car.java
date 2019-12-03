@@ -1,9 +1,6 @@
 package app.entities;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,8 +11,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import app.DTO.CarDTO;
 
 @Entity
 @Table(name = "cars")
@@ -181,44 +176,4 @@ public class Car implements java.io.Serializable {
 				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + "]";
 	}
 
-	public static List<Car> mapToEntityList(List<CarDTO> carListResponse) throws ParseException {
-
-		Car car;
-		List<Car> carList = new ArrayList<>();
-
-		for (CarDTO CarDTO : carListResponse) {
-
-			car = new Car();
-			car.setId(CarDTO.getId());
-			car.setBrand(CarDTO.getBrand());
-			car.setCountry(CarDTO.getCountry());
-			LocalDateTime dateCreatedAt = LocalDateTime.parse(CarDTO.getCreatedAt());
-			car.setCreatedAt(dateCreatedAt);
-			LocalDateTime dateLastUpdated = LocalDateTime.parse(CarDTO.getLastUpdated());
-			car.setLastUpdated(dateLastUpdated);
-			LocalDateTime dateRegistration = LocalDateTime.parse(CarDTO.getRegistration());
-			car.setRegistration(dateRegistration);
-			carList.add(car);
-		}
-
-		return carList;
-	}
-
-	public static Car mapToEntity(CarDTO carDTO) throws ParseException {
-
-		Car car;
-
-		car = new Car();
-		car.setId(carDTO.getId());
-		car.setBrand(carDTO.getBrand());
-		car.setCountry(carDTO.getCountry());
-		LocalDateTime dateCreatedAt = LocalDateTime.parse(carDTO.getCreatedAt());
-		car.setCreatedAt(dateCreatedAt);
-		LocalDateTime dateLastUpdated = LocalDateTime.parse(carDTO.getLastUpdated());
-		car.setLastUpdated(dateLastUpdated);
-		LocalDateTime dateRegistration = LocalDateTime.parse(carDTO.getRegistration());
-		car.setRegistration(dateRegistration);
-
-		return car;
-	}
 }
