@@ -4,9 +4,12 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 
 import app.DTO.CarDTO;
 import app.entities.Car;
+import app.event.CarAddedEvent;
 import app.exceptions.DataNotFoundException;
 import app.exceptions.EmptyBodyException;
 import app.jpa.CarJPA;
@@ -17,6 +20,9 @@ public class CarService {
 
 	@EJB
 	private CarJPA jpa;
+	
+	@Inject
+	private Event<CarAddedEvent> carAddedEvent;
 
 	public CarService() {
 	}
@@ -34,6 +40,7 @@ public class CarService {
 		if (car == null || car.getBrand() == null || car.getCountry() == null) {
 			throw new EmptyBodyException("Body was empty.");
 		}
+		carAddedEvent.fire(new CarAddedEvent(car));
 		return jpa.addEntity(car);
 	}
 
