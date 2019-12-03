@@ -118,7 +118,7 @@ public class CarTest {
 		Car carToTest = createCarForTest(id, null, "Spain");
 
 		Mockito.when(jpa.getEntityById(id)).thenReturn(carToTest);
-		Mockito.when(jpa.putEntity(carToTest)).thenReturn(null);
+//		Mockito.when(jpa.putEntity(carToTest)).thenReturn(null);
 
 		// METHOD TO BE TESTED
 		carService.putCar(id, carToTest);
