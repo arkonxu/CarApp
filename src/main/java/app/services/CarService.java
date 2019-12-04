@@ -6,6 +6,10 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
+import org.apache.log4j.Logger;
 
 import app.DTO.CarDTO;
 import app.entities.Car;
@@ -20,20 +24,22 @@ public class CarService {
 
 	@EJB
 	private CarJPA jpa;
-	
+
 	@Inject
 	private Event<CarAddedEvent> carAddedEvent;
+
+	Logger logger = Logger.getLogger(CarService.class);
 
 	public CarService() {
 	}
 
 	public List<CarDTO> getAll() {
 		List<Car> carList = jpa.getAll();
-		List<CarDTO> CarDTOList = MapEntityToDTO.mapToResponseList(carList);
-		if (CarDTOList == null | CarDTOList.isEmpty()) {
+		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(carList);
+		if (carDTOList == null | carDTOList.isEmpty()) {
 			throw new DataNotFoundException("Not found");
 		}
-		return CarDTOList;
+		return carDTOList;
 	}
 
 	public Car addCar(Car car) {
@@ -66,15 +72,11 @@ public class CarService {
 			throw new DataNotFoundException("Not found");
 		} else {
 			Car oldCar = jpa.getEntityById(id);
-//			LocalDateTime createdAt = LocalDateTime.parse(getCarById(id).getCreatedAt());
-//			car.setId(id);
-//			car.setCreatedAt(createdAt);
 			oldCar.setBrand(car.getBrand());
 			oldCar.setCountry(car.getCountry());
 			if (car == null || car.getBrand() == null || car.getCountry() == null) {
 				throw new EmptyBodyException("Body was empty.");
 			}
-//			return jpa.putEntity(car);
 			return jpa.putEntity(oldCar);
 		}
 	}
@@ -87,4 +89,16 @@ public class CarService {
 		}
 	}
 
+	@Transactional(TxType.REQUIRES_NEW)
+	public Car pruebaTransaction(Car car) {
+		Car addedCar = jpa.addEntity(car);
+		logger.info("Car " + car + " ADDED.");
+		addedCar.setBrand("SEAT");
+		addedCar.setCountry("Spain");
+		logger.info("CAR " + car + "UPDATED.");
+		List<Car> carList = jpa.getAll();
+		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(carList);
+		logger.info("GET CARLIST " + carDTOList);
+		throw new DataNotFoundException("Not found");
+	}
 }

@@ -34,7 +34,7 @@ import app.services.CarService;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("cars")
 @LocalBean
-public class CarResourceImpl implements CarResource{
+public class CarResourceImpl implements CarResource {
 
 	@EJB
 	private CarService carService;
@@ -79,6 +79,13 @@ public class CarResourceImpl implements CarResource{
 	public Response deleteCar(@PathParam("carId") long id) {
 		carService.deleteCar(id);
 		return Response.status(Status.NO_CONTENT).build();
+	}
+
+	@POST
+	@Path("/prueba")
+	public Response pruebaTransaction(Car car) {
+		Car coche = carService.pruebaTransaction(car);
+		return Response.status(Status.OK).entity(coche).build();
 	}
 
 }
