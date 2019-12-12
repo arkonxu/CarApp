@@ -1,12 +1,17 @@
 package app.entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -39,6 +44,15 @@ public class Car implements java.io.Serializable {
 
 	@Column(name = "lastUpdated")
 	private LocalDateTime lastUpdated;
+
+	@OneToOne(mappedBy = "car", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+	private License license;
+	
+	@OneToMany(mappedBy = "car", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+	private List<DailyEmissions> dailyEmissions;
+	
+	@ManyToMany(mappedBy = "cars", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+	private List<ExtraFeature> extraFeature;
 
 	public Car() {
 	}
@@ -125,8 +139,11 @@ public class Car implements java.io.Serializable {
 		result = prime * result + ((brand == null) ? 0 : brand.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
 		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((dailyEmissions == null) ? 0 : dailyEmissions.hashCode());
+		result = prime * result + ((extraFeature == null) ? 0 : extraFeature.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastUpdated == null) ? 0 : lastUpdated.hashCode());
+		result = prime * result + ((license == null) ? 0 : license.hashCode());
 		result = prime * result + ((registration == null) ? 0 : registration.hashCode());
 		return result;
 	}
@@ -155,12 +172,27 @@ public class Car implements java.io.Serializable {
 				return false;
 		} else if (!createdAt.equals(other.createdAt))
 			return false;
+		if (dailyEmissions == null) {
+			if (other.dailyEmissions != null)
+				return false;
+		} else if (!dailyEmissions.equals(other.dailyEmissions))
+			return false;
+		if (extraFeature == null) {
+			if (other.extraFeature != null)
+				return false;
+		} else if (!extraFeature.equals(other.extraFeature))
+			return false;
 		if (id != other.id)
 			return false;
 		if (lastUpdated == null) {
 			if (other.lastUpdated != null)
 				return false;
 		} else if (!lastUpdated.equals(other.lastUpdated))
+			return false;
+		if (license == null) {
+			if (other.license != null)
+				return false;
+		} else if (!license.equals(other.license))
 			return false;
 		if (registration == null) {
 			if (other.registration != null)
@@ -173,7 +205,32 @@ public class Car implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "Car [id=" + id + ", brand=" + brand + ", registration=" + registration + ", country=" + country
-				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + "]";
+				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + ", license=" + license
+				+ ", dailyEmissions=" + dailyEmissions + ", extraFeature=" + extraFeature + "]";
+	}
+
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
+	}
+
+	public List<DailyEmissions> getDailyEmissions() {
+		return dailyEmissions;
+	}
+
+	public void setDailyEmissions(List<DailyEmissions> dailyEmissions) {
+		this.dailyEmissions = dailyEmissions;
+	}
+
+	public List<ExtraFeature> getExtraFeature() {
+		return extraFeature;
+	}
+
+	public void setExtraFeature(List<ExtraFeature> extraFeature) {
+		this.extraFeature = extraFeature;
 	}
 
 }

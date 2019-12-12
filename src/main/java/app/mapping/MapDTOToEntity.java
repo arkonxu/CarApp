@@ -82,8 +82,6 @@ public class MapDTOToEntity {
 		moto.setId(motoDTO.getId());
 		moto.setBrand(motoDTO.getBrand());
 		moto.setCountry(motoDTO.getCountry());
-		// if(motoDTO.getCreatedAt() == null){ LocalDateTime.now; } else{
-		// LocalDateTime.parse(motoDTO.getCreatedAt()); }
 		LocalDateTime dateCreatedAt = (motoDTO.getCreatedAt()) == null ? LocalDateTime.now()
 				: LocalDateTime.parse(motoDTO.getCreatedAt());
 		moto.setCreatedAt(dateCreatedAt);

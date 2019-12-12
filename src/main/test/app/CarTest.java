@@ -61,7 +61,6 @@ public class CarTest {
 		carService.getAll();
 
 		fail("Should throw DataNotFoundException because empty response");
-
 	}
 
 	@Test
@@ -93,7 +92,6 @@ public class CarTest {
 		carService.getCarByCountry(Mockito.anyString());
 
 		fail("Should throw DataNotFoundException because empty response");
-
 	}
 
 	@Test
@@ -152,7 +150,6 @@ public class CarTest {
 		carService.getCarById(Mockito.anyLong());
 
 		fail("Should throw DataNotFoundException because empty response");
-
 	}
 
 	@Test
@@ -162,7 +159,6 @@ public class CarTest {
 		// METHOD TO BE TESTED
 		carService.addCar(car);
 		Mockito.verify(jpa).addEntity(car);
-
 	}
 
 	private Car createCarForTest(Long id, String brand, String country) {
