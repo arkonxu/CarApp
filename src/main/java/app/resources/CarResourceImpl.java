@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import app.DTO.CarDTO;
-import app.entities.Car;
 import app.services.CarService;
 
 @Stateless
@@ -41,21 +40,22 @@ public class CarResourceImpl implements CarResource {
 
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
-		List<CarDTO> CarDTOList = new ArrayList<>();
+		List<CarDTO> carDTOList = new ArrayList<>();
 		if (country != null && !country.isEmpty()) {
-			CarDTOList = carService.getCarByCountry(country);
-			return Response.status(Status.OK).entity(CarDTOList).build();
+			carDTOList = carService.getCarByCountry(country);
+			return Response.status(Status.OK).entity(carDTOList).build();
 		} else {
-			CarDTOList = carService.getAll();
-			return Response.status(Status.OK).entity(CarDTOList).build();
+			carDTOList = carService.getAll();
+			return Response.status(Status.OK).entity(carDTOList).build();
 		}
 	}
 
 	@POST
-	public Response addCar(@Valid Car car, @Context UriInfo uriInfo) throws URISyntaxException, ParseException {
-		Car newCar = carService.addCar(car);
-		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
-		return Response.created(new URI(uri)).status(Status.CREATED).entity(newCar).build();
+	public Response addCar(@Valid CarDTO carDTO, @Context UriInfo uriInfo) throws URISyntaxException, ParseException {
+		carService.addCar(carDTO);
+		CarDTO newCarDTO = carService.getAll().get(carService.getAll().size() - 1);
+		String uri = uriInfo.getAbsolutePath().toString() + newCarDTO.getId();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(newCarDTO).build();
 	}
 
 	@GET
@@ -67,11 +67,11 @@ public class CarResourceImpl implements CarResource {
 
 	@PUT
 	@Path("/{carId}")
-	public Response putCar(@PathParam("carId") long id, @Valid Car car, @Context UriInfo uriInfo)
-			throws URISyntaxException {
-		Car newCar = carService.putCar(id, car);
-		String uri = uriInfo.getAbsolutePath().toString() + newCar.getId();
-		return Response.created(new URI(uri)).status(Status.CREATED).entity(carService.putCar(id, car)).build();
+	public Response putCar(@PathParam("carId") long id, @Valid CarDTO carDTO, @Context UriInfo uriInfo)
+			throws URISyntaxException, ParseException {
+		CarDTO newCarDTO = carService.putCar(id, carDTO);
+		String uri = uriInfo.getAbsolutePath().toString() + newCarDTO.getId();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(newCarDTO).build();
 	}
 
 	@DELETE
@@ -83,9 +83,9 @@ public class CarResourceImpl implements CarResource {
 
 	@POST
 	@Path("/prueba")
-	public Response pruebaTransaction(Car car) {
-		Car coche = carService.pruebaTransaction(car);
-		return Response.status(Status.OK).entity(coche).build();
+	public Response pruebaTransaction(CarDTO carDTO) throws ParseException {
+		CarDTO car = carService.pruebaTransaction(carDTO);
+		return Response.status(Status.OK).entity(car).build();
 	}
 
 }

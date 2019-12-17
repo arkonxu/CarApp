@@ -43,7 +43,7 @@ public class CarJPA implements GenericJPA<Car>{
 		return em.merge(car);
 	}
 
-	public List<Car> getCarByCountry(String country) {
+	public List<Car> getEntityByCountry(String country) {
 		String query = "SELECT d FROM Car d WHERE UPPER(country) = '" + country.toUpperCase() + "'";
 		TypedQuery<Car> createQuery = em.createQuery(query, Car.class);
 		return createQuery.getResultList();

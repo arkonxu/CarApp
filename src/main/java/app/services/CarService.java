@@ -1,5 +1,6 @@
 package app.services;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -17,6 +18,7 @@ import app.event.CarAddedEvent;
 import app.exceptions.DataNotFoundException;
 import app.exceptions.EmptyBodyException;
 import app.jpa.CarJPA;
+import app.mapping.MapDTOToEntity;
 import app.mapping.MapEntityToDTO;
 
 @Stateless
@@ -30,9 +32,6 @@ public class CarService {
 
 	Logger logger = Logger.getLogger(CarService.class);
 
-	public CarService() {
-	}
-
 	public List<CarDTO> getAll() {
 		List<Car> carList = jpa.getAll();
 		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(carList);
@@ -42,16 +41,17 @@ public class CarService {
 		return carDTOList;
 	}
 
-	public Car addCar(Car car) {
-		if (car == null || car.getBrand() == null || car.getCountry() == null) {
+	public Car addCar(CarDTO carDTO) throws ParseException {
+		if (carDTO == null || carDTO.getBrand() == null || carDTO.getCountry() == null) {
 			throw new EmptyBodyException("Body was empty.");
 		}
+		Car car = MapDTOToEntity.mapToEntity(carDTO);
 		carAddedEvent.fire(new CarAddedEvent(car));
 		return jpa.addEntity(car);
 	}
 
 	public List<CarDTO> getCarByCountry(String country) {
-		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(jpa.getCarByCountry(country));
+		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(jpa.getEntityByCountry(country));
 		if (carDTOList == null | carDTOList.isEmpty()) {
 			throw new DataNotFoundException("Not found");
 		}
@@ -67,17 +67,18 @@ public class CarService {
 		return carDTO;
 	}
 
-	public Car putCar(long id, Car car) {
+	public CarDTO putCar(long id, CarDTO carDTO) {
 		if (id <= 0) {
 			throw new DataNotFoundException("Not found");
 		} else {
 			Car oldCar = jpa.getEntityById(id);
-			oldCar.setBrand(car.getBrand());
-			oldCar.setCountry(car.getCountry());
-			if (car == null || car.getBrand() == null || car.getCountry() == null) {
+			oldCar.setBrand(carDTO.getBrand());
+			oldCar.setCountry(carDTO.getCountry());
+			if (carDTO == null || carDTO.getBrand() == null || carDTO.getCountry() == null) {
 				throw new EmptyBodyException("Body was empty.");
 			}
-			return jpa.putEntity(oldCar);
+			CarDTO newCar = MapEntityToDTO.mapToResponse(jpa.putEntity(oldCar));
+			return newCar;
 		}
 	}
 
@@ -90,7 +91,8 @@ public class CarService {
 	}
 
 	@Transactional(TxType.REQUIRES_NEW)
-	public Car pruebaTransaction(Car car) {
+	public CarDTO pruebaTransaction(CarDTO carDTO) throws ParseException {
+		Car car = MapDTOToEntity.mapToEntity(carDTO);
 		Car addedCar = jpa.addEntity(car);
 		logger.info("Car " + car + " ADDED.");
 

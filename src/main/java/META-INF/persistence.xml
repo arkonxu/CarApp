@@ -11,6 +11,7 @@
 		<jta-data-source>PostgreSQLPool</jta-data-source>
 		<class>app.entities.Car</class>
 		<class>app.entities.Brand</class>
+		<class>app.entities.Moto</class>
 		<properties>
 			<property name="javax.persistence.schema-generation.database.action"
 				value="drop-and-create" />

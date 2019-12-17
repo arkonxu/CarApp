@@ -14,4 +14,6 @@ public interface GenericJPA<T> extends Serializable {
 	T deleteEntity(Long id);
 
 	List<T> getAll();
+	
+	List<T> getEntityByCountry(String country);
 }

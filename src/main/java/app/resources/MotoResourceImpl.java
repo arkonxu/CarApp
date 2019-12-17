@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import app.DTO.MotoDTO;
-import app.entities.Moto;
 import app.services.MotoService;
 
 @Stateless
@@ -41,21 +40,22 @@ public class MotoResourceImpl implements MotoResource {
 
 	@GET
 	public Response getAll(@QueryParam("country") String country) {
-		List<MotoDTO> MotoDTOList = new ArrayList<>();
+		List<MotoDTO> motoDTOList = new ArrayList<>();
 		if (country != null && !country.isEmpty()) {
-			MotoDTOList = motoService.getMotoByCountry(country);
-			return Response.status(Status.OK).entity(MotoDTOList).build();
+			motoDTOList = motoService.getMotoByCountry(country);
+			return Response.status(Status.OK).entity(motoDTOList).build();
 		} else {
-			MotoDTOList = motoService.getAll();
-			return Response.status(Status.OK).entity(MotoDTOList).build();
+			motoDTOList = motoService.getAll();
+			return Response.status(Status.OK).entity(motoDTOList).build();
 		}
 	}
 
 	@POST
-	public Response addMoto(@Valid MotoDTO moto, @Context UriInfo uriInfo) throws URISyntaxException, ParseException {
-		Moto newMoto = motoService.addMoto(moto);
-		String uri = uriInfo.getAbsolutePath().toString() + newMoto.getId();
-		return Response.created(new URI(uri)).status(Status.CREATED).entity(newMoto).build();
+	public Response addMoto(@Valid MotoDTO motoDTO, @Context UriInfo uriInfo) throws URISyntaxException, ParseException {
+		motoService.addMoto(motoDTO);
+		MotoDTO newMotoDTO = motoService.getAll().get(motoService.getAll().size() - 1);
+		String uri = uriInfo.getAbsolutePath().toString() + newMotoDTO.getId();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(newMotoDTO).build();
 	}
 
 	@GET
@@ -67,11 +67,11 @@ public class MotoResourceImpl implements MotoResource {
 
 	@PUT
 	@Path("/{motoId}")
-	public Response putMoto(@PathParam("motoId") long id, @Valid MotoDTO moto, @Context UriInfo uriInfo)
+	public Response putMoto(@PathParam("motoId") long id, @Valid MotoDTO motoDTO, @Context UriInfo uriInfo)
 			throws URISyntaxException {
-		Moto newMoto = motoService.putMoto(id, moto);
-		String uri = uriInfo.getAbsolutePath().toString() + newMoto.getId();
-		return Response.created(new URI(uri)).status(Status.CREATED).entity(motoService.putMoto(id, moto)).build();
+		MotoDTO newMotoDTO = motoService.putMoto(id, motoDTO);
+		String uri = uriInfo.getAbsolutePath().toString() + newMotoDTO.getId();
+		return Response.created(new URI(uri)).status(Status.CREATED).entity(newMotoDTO).build();
 	}
 
 	@DELETE

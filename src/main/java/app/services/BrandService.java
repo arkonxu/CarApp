@@ -1,12 +1,18 @@
 package app.services;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
+import app.DTO.BrandDTO;
 import app.entities.Brand;
+import app.exceptions.DataNotFoundException;
+import app.exceptions.EmptyBodyException;
 import app.jpa.BrandJPA;
+import app.mapping.MapDTOToEntity;
+import app.mapping.MapEntityToDTO;
 
 @Stateless
 public class BrandService {
@@ -17,39 +23,61 @@ public class BrandService {
 	public BrandService() {
 	}
 
-	public List<Brand> getAll() {
-		return jpa.getAll();
+	public List<BrandDTO> getAll() throws ParseException {
+		List<Brand> brandList = jpa.getAll();
+		List<BrandDTO> brandDTOList = MapEntityToDTO.mapBrandToResponseList(brandList);
+		if (brandDTOList == null | brandDTOList.isEmpty()) {
+			throw new DataNotFoundException("Not found");
+		}
+		return brandDTOList;
 	}
 
-	public Brand addBrand(Brand brand) {
+	public Brand addBrand(BrandDTO brandDTO) throws ParseException {
+		if (brandDTO == null || brandDTO.getName() == null || brandDTO.getCountry() == null) {
+			throw new EmptyBodyException("Body was empty.");
+		}
+		Brand brand = MapDTOToEntity.mapBrandToEntity(brandDTO);
 		return jpa.addEntity(brand);
 	}
 
-	public List<Brand> getBrandByCountry(String country) {
-		List<Brand> brandList = jpa.getAll();
-		for (Brand brand : brandList) {
-			if (brand.getCountry().equalsIgnoreCase(country)) {
-				brandList.add(brand);
-			}
+	public List<BrandDTO> getBrandByCountry(String country) throws ParseException {
+		List<BrandDTO> brandDTOList = MapEntityToDTO.mapBrandToResponseList(jpa.getEntityByCountry(country));
+		if (brandDTOList == null | brandDTOList.isEmpty()) {
+			throw new DataNotFoundException("Not found");
 		}
-		return brandList;
+		return brandDTOList;
 	}
 
-	public Brand getBrandById(long id) {
-		Brand brand;
-		brand = jpa.getEntityById(id, Brand.class);
-		return brand;
+	public BrandDTO getBrandById(long id) throws ParseException {
+		Brand brand = jpa.getEntityById(id);
+		if (brand == null || brand.getName() == null || brand.getCountry() == null) {
+			throw new DataNotFoundException("Not found");
+		}
+		BrandDTO brandDTO = MapEntityToDTO.mapBrandToResponse(brand);
+		return brandDTO;
 	}
 
-	public Brand putBrand(long id, Brand brand) {
+	public BrandDTO putBrand(long id, BrandDTO brandDTO) throws ParseException {
 		if (id <= 0) {
-			return null;
+			throw new DataNotFoundException("Not found");
+		} else {
+			Brand oldBrand = jpa.getEntityById(id);
+			oldBrand.setName(brandDTO.getName());
+			oldBrand.setCountry(brandDTO.getCountry());
+			if (brandDTO == null || brandDTO.getName() == null || brandDTO.getCountry() == null) {
+				throw new EmptyBodyException("Body was empty.");
+			}
+			BrandDTO newBrandDTO = MapEntityToDTO.mapBrandToResponse(jpa.putEntity(oldBrand));
+			return newBrandDTO;
 		}
-		return jpa.putEntity(brand);
 	}
 
-	public void deleteBrand(long id) {
-		jpa.deleteEntity(id);
+	public Brand deleteBrand(long id) {
+		if (id <= 0) {
+			throw new DataNotFoundException("Not found");
+		} else {
+			return jpa.deleteEntity(id);
+		}
 	}
 
 }

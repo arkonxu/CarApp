@@ -1,88 +1,43 @@
 package app.resources;
 
-import java.util.List;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
+import javax.validation.Valid;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
-import org.apache.log4j.Logger;
+import app.DTO.BrandDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
-import app.entities.Brand;
-import app.services.BrandService;
+public interface BrandResource {
 
-@Stateless
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-@Path("brands")
-public class BrandResource {
+	@Operation(summary = "Get all brands", description = "Retrieves all the brands from the DB", responses = {
+			@ApiResponse(description = "Brands", responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BrandDTO.class)))), })
+	public Response getAll(@QueryParam("country") String country) throws ParseException;
 
-	@EJB
-	private BrandService brandService;
+	@Operation(summary = "Add new brand", description = "Add a new brand to the DB", responses = {
+			@ApiResponse(description = "Created", responseCode = "201", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BrandDTO.class)))), })
+	public Response addBrand(@Valid BrandDTO brandDTO, @Context UriInfo uriInfo) throws URISyntaxException, ParseException;
 
-	final static Logger logger = Logger.getLogger(BrandResource.class);
+	@Operation(summary = "Get brand filtering by ID", description = "Retrieves a brand filtered by ID from the DB", responses = {
+			@ApiResponse(description = "Brand", responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BrandDTO.class)))), })
+	public Response getBrandById(@PathParam("brandId") long id) throws ParseException;
 
-	@GET
-	public List<Brand> getAll(@QueryParam("country") String country) {
-		if (country != null) {
-			return brandService.getBrandByCountry(country);
-		}
-		return brandService.getAll();
-	}
+	@Operation(summary = "Update a brand with new information", description = "Update a brand to the DB", responses = {
+			@ApiResponse(description = "Created", responseCode = "201", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BrandDTO.class)))), })
+	public Response putBrand(@PathParam("brandId") long id, @Valid BrandDTO brandDTO, @Context UriInfo uriInfo)
+			throws URISyntaxException, ParseException;
 
-	@POST
-	public String addBrand(Brand brand) {
-		try {
-			brandService.addBrand(brand);
-			return "Se ha añadido correctamente";
-		} catch (Exception e) {
-			logger.error(e);
-			return "Ha habido un error al añadir";
-		}
-	}
+	@Operation(summary = "Delete a brand filtering by ID", description = "Delete a brand filtered by ID from the DB", responses = {
+			@ApiResponse(description = "No content", responseCode = "204", content = @Content(array = @ArraySchema(schema = @Schema(implementation = BrandDTO.class)))), })
+	public Response deleteBrand(@PathParam("brandId") long id);
 
-	@GET
-	@Path("/{brandId}")
-	public Brand getBrandById(@PathParam("brandId") long id) {
-		try {
-			return brandService.getBrandById(id);
-		} catch (Exception e) {
-			logger.error(e);
-			return null;
-		}
-	}
-
-	@PUT
-	@Path("/{brandId}")
-	public String putBrand(@PathParam("brandId") long id, Brand brand) {
-		try {
-			brand.setId(id);
-			brandService.putBrand(id, brand);
-			return "Se ha actualizado correctamente";
-		} catch (Exception e) {
-			logger.error(e);
-			return "Ha habido un error al actualizar";
-		}
-	}
-
-	@DELETE
-	@Path("/{brandId}")
-	public String deleteBrand(@PathParam("brandId") long id) {
-		try {
-			brandService.deleteBrand(id);
-			return "Se ha borrado correctamente";
-		} catch (Exception e) {
-			logger.error(e);
-			return "Ha habido un error al eliminar";
-		}
-	}
 }

@@ -36,13 +36,12 @@ public class MotoService {
 		if (motoDTO == null || motoDTO.getBrand() == null || motoDTO.getCountry() == null) {
 			throw new EmptyBodyException("Body was empty.");
 		}
-		Moto moto = new Moto();
-		moto = MapDTOToEntity.mapMotoToEntity(motoDTO);
+		Moto moto = MapDTOToEntity.mapMotoToEntity(motoDTO);
 		return jpa.addEntity(moto);
 	}
 
 	public List<MotoDTO> getMotoByCountry(String country) {
-		List<MotoDTO> motoDTOList = MapEntityToDTO.mapMotoToResponseList(jpa.getMotoByCountry(country));
+		List<MotoDTO> motoDTOList = MapEntityToDTO.mapMotoToResponseList(jpa.getEntityByCountry(country));
 		if (motoDTOList == null | motoDTOList.isEmpty()) {
 			throw new DataNotFoundException("Not found");
 		}
@@ -58,7 +57,7 @@ public class MotoService {
 		return motoDTO;
 	}
 
-	public Moto putMoto(long id, MotoDTO motoDTO) {
+	public MotoDTO putMoto(long id, MotoDTO motoDTO) {
 		if (id <= 0) {
 			throw new DataNotFoundException("Not found");
 		} else {
@@ -68,7 +67,8 @@ public class MotoService {
 			if (motoDTO == null || motoDTO.getBrand() == null || motoDTO.getCountry() == null) {
 				throw new EmptyBodyException("Body was empty.");
 			}
-			return jpa.putEntity(oldMoto);
+			MotoDTO newMoto = MapEntityToDTO.mapMotoToResponse(jpa.putEntity(oldMoto));
+			return newMoto;
 		}
 	}
 
