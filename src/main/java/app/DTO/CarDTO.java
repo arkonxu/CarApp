@@ -2,6 +2,8 @@ package app.DTO;
 
 import javax.validation.constraints.NotNull;
 
+import app.entities.License;
+
 public class CarDTO {
 
 	private long id;
@@ -17,6 +19,8 @@ public class CarDTO {
 	private String lastUpdated;
 
 	private String registration;
+	
+	private License license;
 
 	public long getId() {
 		return id;
@@ -70,6 +74,14 @@ public class CarDTO {
 	public String toString() {
 		return "carDTO [id=" + id + ", brand=" + brand + ", country=" + country + ", createdAt=" + createdAt
 				+ ", lastUpdated=" + lastUpdated + ", registration=" + registration + "]";
+	}
+
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
 	}
 
 }

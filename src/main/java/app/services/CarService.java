@@ -93,12 +93,15 @@ public class CarService {
 	public Car pruebaTransaction(Car car) {
 		Car addedCar = jpa.addEntity(car);
 		logger.info("Car " + car + " ADDED.");
+
 		addedCar.setBrand("SEAT");
 		addedCar.setCountry("Spain");
 		logger.info("CAR " + car + "UPDATED.");
+
 		List<Car> carList = jpa.getAll();
 		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(carList);
 		logger.info("GET CARLIST " + carDTOList);
+
 		throw new DataNotFoundException("Not found");
 	}
 }
