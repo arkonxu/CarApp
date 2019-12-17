@@ -30,7 +30,6 @@ public class Timer {
 		if (cars != null) {
 			cars.forEach(car -> {
 				car.setChecked(true);
-				car.setBrand("AUDI");
 				logger.info("CAR CHECK: " + car.isChecked());
 				jpa.putEntity(car);
 			});
