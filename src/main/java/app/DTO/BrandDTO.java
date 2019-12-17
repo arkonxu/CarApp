@@ -1,8 +1,12 @@
 package app.DTO;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
-public class BrandDTO {
+public class BrandDTO implements Serializable{
+
+	private static final long serialVersionUID = -641189535884913197L;
 
 	private long id;
 
