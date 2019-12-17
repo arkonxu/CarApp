@@ -2,6 +2,7 @@ package app.services;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -33,8 +34,7 @@ public class CarService {
 	Logger logger = Logger.getLogger(CarService.class);
 
 	public List<CarDTO> getAll() {
-		List<Car> carList = jpa.getAll();
-		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(carList);
+		List<CarDTO> carDTOList = jpa.getAll().stream().map(MapEntityToDTO::mapToResponse).collect(Collectors.toList());
 		if (carDTOList == null | carDTOList.isEmpty()) {
 			throw new DataNotFoundException("Not found");
 		}
@@ -100,8 +100,7 @@ public class CarService {
 		addedCar.setCountry("Spain");
 		logger.info("CAR " + car + "UPDATED.");
 
-		List<Car> carList = jpa.getAll();
-		List<CarDTO> carDTOList = MapEntityToDTO.mapToResponseList(carList);
+		List<CarDTO> carDTOList = jpa.getAll().stream().map(MapEntityToDTO::mapToResponse).collect(Collectors.toList());
 		logger.info("GET CARLIST " + carDTOList);
 
 		throw new DataNotFoundException("Not found");
