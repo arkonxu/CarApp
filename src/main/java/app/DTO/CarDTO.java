@@ -1,10 +1,14 @@
 package app.DTO;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
 import app.entities.License;
 
-public class CarDTO {
+public class CarDTO implements Serializable{
+
+	private static final long serialVersionUID = 6769416349944336939L;
 
 	private long id;
 

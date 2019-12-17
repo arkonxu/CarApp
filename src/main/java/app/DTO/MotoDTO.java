@@ -1,8 +1,12 @@
 package app.DTO;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
-public class MotoDTO {
+public class MotoDTO implements Serializable{
+
+	private static final long serialVersionUID = 5505484583196488045L;
 
 	private long id;
 

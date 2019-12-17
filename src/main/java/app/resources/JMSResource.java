@@ -10,7 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import app.entities.Car;
+import app.DTO.CarDTO;
 import app.jms.JMSSender;
 
 @Path("jms")
@@ -21,7 +21,7 @@ public class JMSResource {
 
 	@POST
 	@Path("/addObject")
-	public Response sendObject(@Valid Car car) {
+	public Response sendObject(@Valid CarDTO car) {
 		sender.addCar(car);
 		return Response.status(Status.CREATED).entity(car).build();
 	}
@@ -35,7 +35,7 @@ public class JMSResource {
 
 	@PUT
 	@Path("/putObject/{carId}")
-	public Response putCars(Car car, @PathParam("carId") long id) {
+	public Response putCars(CarDTO car, @PathParam("carId") long id) {
 		sender.putCars(car, id);
 		return Response.status(Status.CREATED).entity(car).build();
 	}

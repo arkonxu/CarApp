@@ -1,6 +1,7 @@
 package app.jms;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -13,8 +14,9 @@ import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 
-import app.entities.Car;
+import app.DTO.CarDTO;
 import app.exceptions.DataNotFoundException;
+import app.services.CarService;
 
 @Stateless
 public class JMSSender {
@@ -25,9 +27,12 @@ public class JMSSender {
 	@Resource(mappedName = "jms/queue")
 	private Queue queue;
 
+	@EJB
+	CarService service;
+
 	private final static Logger logger = Logger.getLogger(JMSSender.class);
 
-	public void addCar(Car car) {
+	public CarDTO addCar(CarDTO car) {
 		try (final Connection connection = connectionFactory.createConnection();
 				final Session session = connection.createSession(true, 0);) {
 
@@ -41,6 +46,7 @@ public class JMSSender {
 			logger.warn("Error in the sender JMS: " + e.getMessage());
 			logger.error(e.getMessage());
 		}
+		return service.getAll().get(service.getAll().size() - 1);
 	}
 
 	public void deleteCar(long id) {
@@ -60,7 +66,7 @@ public class JMSSender {
 		}
 	}
 
-	public void putCars(Car car, long id) {
+	public void putCars(CarDTO car, long id) {
 		try (final Connection connection = connectionFactory.createConnection();
 				final Session session = connection.createSession(true, 0);) {
 
