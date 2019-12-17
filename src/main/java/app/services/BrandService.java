@@ -2,6 +2,7 @@ package app.services;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -24,8 +25,7 @@ public class BrandService {
 	}
 
 	public List<BrandDTO> getAll() throws ParseException {
-		List<Brand> brandList = jpa.getAll();
-		List<BrandDTO> brandDTOList = MapEntityToDTO.mapBrandToResponseList(brandList);
+		List<BrandDTO> brandDTOList = jpa.getAll().stream().map(MapEntityToDTO::mapBrandToResponse).collect(Collectors.toList());
 		if (brandDTOList == null | brandDTOList.isEmpty()) {
 			throw new DataNotFoundException("Not found");
 		}
