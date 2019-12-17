@@ -21,6 +21,8 @@ public class CarDTO {
 	private String registration;
 	
 	private License license;
+	
+	private boolean checked;
 
 	public long getId() {
 		return id;
@@ -82,6 +84,14 @@ public class CarDTO {
 
 	public void setLicense(License license) {
 		this.license = license;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 
 }

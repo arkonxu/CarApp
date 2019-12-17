@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.DefaultValue;
 
 @Entity
 @Table(name = "cars")
@@ -45,12 +46,16 @@ public class Car implements java.io.Serializable {
 	@Column(name = "lastUpdated")
 	private LocalDateTime lastUpdated;
 
+	@Column(name = "CHECKED")
+	@DefaultValue(value = "false")
+	private boolean checked;
+
 	@OneToOne(mappedBy = "car", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
 	private License license;
-	
+
 	@OneToMany(mappedBy = "car", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
 	private List<DailyEmissions> dailyEmissions;
-	
+
 	@ManyToMany(mappedBy = "cars", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
 	private List<ExtraFeature> extraFeature;
 
@@ -137,6 +142,7 @@ public class Car implements java.io.Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((brand == null) ? 0 : brand.hashCode());
+		result = prime * result + (checked ? 1231 : 1237);
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
 		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
 		result = prime * result + ((dailyEmissions == null) ? 0 : dailyEmissions.hashCode());
@@ -161,6 +167,8 @@ public class Car implements java.io.Serializable {
 			if (other.brand != null)
 				return false;
 		} else if (!brand.equals(other.brand))
+			return false;
+		if (checked != other.checked)
 			return false;
 		if (country == null) {
 			if (other.country != null)
@@ -205,8 +213,8 @@ public class Car implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return "Car [id=" + id + ", brand=" + brand + ", registration=" + registration + ", country=" + country
-				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + ", license=" + license
-				+ ", dailyEmissions=" + dailyEmissions + ", extraFeature=" + extraFeature + "]";
+				+ ", createdAt=" + createdAt + ", lastUpdated=" + lastUpdated + ", checked=" + checked + ", license="
+				+ license + ", dailyEmissions=" + dailyEmissions + ", extraFeature=" + extraFeature + "]";
 	}
 
 	public License getLicense() {
@@ -231,6 +239,14 @@ public class Car implements java.io.Serializable {
 
 	public void setExtraFeature(List<ExtraFeature> extraFeature) {
 		this.extraFeature = extraFeature;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 
 }

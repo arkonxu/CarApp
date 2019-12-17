@@ -23,9 +23,9 @@ public class MapEntityToDTO {
 			carDTO.setCountry(car.getCountry());
 			carDTO.setCreatedAt((car.getCreatedAt() == null) ? null : car.getCreatedAt().toString());
 			carDTO.setLastUpdated((car.getLastUpdated() == null) ? null : car.getLastUpdated().toString());
-
 			carDTO.setRegistration((car.getRegistration() == null) ? null : car.getRegistration().toString());
-
+			carDTO.setChecked(car.isChecked());
+			
 			carDTOList.add(carDTO);
 		}
 
@@ -42,7 +42,7 @@ public class MapEntityToDTO {
 		carDTO.setCountry(car.getCountry());
 		carDTO.setCreatedAt((car.getCreatedAt() == null) ? null : car.getCreatedAt().toString());
 		carDTO.setLastUpdated((car.getLastUpdated() == null) ? null : car.getLastUpdated().toString());
-
+		carDTO.setChecked(car.isChecked());
 		carDTO.setRegistration((car.getRegistration() == null) ? null : car.getRegistration().toString());
 
 		return carDTO;
@@ -61,7 +61,7 @@ public class MapEntityToDTO {
 			motoDTO.setCountry(moto.getCountry());
 			motoDTO.setCreatedAt((moto.getCreatedAt() == null) ? null : moto.getCreatedAt().toString());
 			motoDTO.setLastUpdated((moto.getLastUpdated() == null) ? null : moto.getLastUpdated().toString());
-
+			
 			motoDTO.setRegistration((moto.getRegistration() == null) ? null : moto.getRegistration().toString());
 
 			motoDTOList.add(motoDTO);
