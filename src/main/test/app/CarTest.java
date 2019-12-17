@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import app.entities.Car;
 import app.exceptions.DataNotFoundException;
 import app.exceptions.EmptyBodyException;
 import app.jpa.CarJPA;
+import app.mapping.MapEntityToDTO;
 import app.services.CarService;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -68,12 +70,12 @@ public class CarTest {
 		List<Car> carsToTest = new ArrayList<Car>();
 		carsToTest.add(createCarForTest(2L, "SEAT", "Spain"));
 
-		Mockito.when(jpa.getCarByCountry(Mockito.anyString())).thenReturn(carsToTest);
+		Mockito.when(jpa.getEntityByCountry(Mockito.anyString())).thenReturn(carsToTest);
 
 		// METHOD TO BE TESTED
 		List<CarDTO> carResult = carService.getCarByCountry(Mockito.anyString());
 
-		Mockito.verify(jpa).getCarByCountry(Mockito.anyString());
+		Mockito.verify(jpa).getEntityByCountry(Mockito.anyString());
 		assertNotNull(carResult);
 		assertEquals(carsToTest.size(), carResult.size());
 		for (int i = 0; i < carsToTest.size(); i++) {
@@ -86,7 +88,7 @@ public class CarTest {
 
 		List<Car> cars = new ArrayList<Car>();
 
-		Mockito.when(jpa.getCarByCountry(Mockito.anyString())).thenReturn(cars);
+		Mockito.when(jpa.getEntityByCountry(Mockito.anyString())).thenReturn(cars);
 
 		// METHOD TO BE TESTED
 		carService.getCarByCountry(Mockito.anyString());
@@ -98,12 +100,13 @@ public class CarTest {
 	public void testPutCar() {
 		Long id = 1L;
 		Car carToTest = createCarForTest(id, "SEAT", "Spain");
+		CarDTO carDTOToTest = MapEntityToDTO.mapToResponse(carToTest);
 
 		Mockito.when(jpa.getEntityById(id)).thenReturn(carToTest);
 		Mockito.when(jpa.putEntity(carToTest)).thenReturn(carToTest);
 
 		// METHOD TO BE TESTED
-		Car carResult = carService.putCar(id, carToTest);
+		CarDTO carResult = carService.putCar(id, carDTOToTest);
 
 		Mockito.verify(jpa).putEntity(carToTest);
 		assertNotNull(carResult);
@@ -114,12 +117,12 @@ public class CarTest {
 	public void testPutCarShouldThrowEmptyBodyException() {
 		Long id = 1L;
 		Car carToTest = createCarForTest(id, null, "Spain");
-
+		CarDTO carDTOToTest = MapEntityToDTO.mapToResponse(carToTest);
 		Mockito.when(jpa.getEntityById(id)).thenReturn(carToTest);
 //		Mockito.when(jpa.putEntity(carToTest)).thenReturn(null);
 
 		// METHOD TO BE TESTED
-		carService.putCar(id, carToTest);
+		carService.putCar(id, carDTOToTest);
 
 		fail("Should throw EmptyBodyException because empty body");
 	}
@@ -153,11 +156,11 @@ public class CarTest {
 	}
 
 	@Test
-	public void testCreateCar() {
+	public void testCreateCar() throws ParseException {
 		Car car = createCarForTest(1L, "BMW", "Germany");
-
+		CarDTO carDTO = MapEntityToDTO.mapToResponse(car);
 		// METHOD TO BE TESTED
-		carService.addCar(car);
+		carService.addCar(carDTO);
 		Mockito.verify(jpa).addEntity(car);
 	}
 
