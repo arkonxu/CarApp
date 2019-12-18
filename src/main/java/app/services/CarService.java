@@ -63,8 +63,7 @@ public class CarService {
 		if (car == null || car.getBrand() == null || car.getCountry() == null) {
 			throw new DataNotFoundException("Not found");
 		}
-		CarDTO carDTO = MapEntityToDTO.mapToResponse(car);
-		return carDTO;
+		return MapEntityToDTO.mapToResponse(car);
 	}
 
 	public CarDTO putCar(long id, CarDTO carDTO) {
@@ -77,8 +76,7 @@ public class CarService {
 			if (carDTO == null || carDTO.getBrand() == null || carDTO.getCountry() == null) {
 				throw new EmptyBodyException("Body was empty.");
 			}
-			CarDTO newCar = MapEntityToDTO.mapToResponse(jpa.putEntity(oldCar));
-			return newCar;
+			return MapEntityToDTO.mapToResponse(jpa.putEntity(oldCar));
 		}
 	}
 

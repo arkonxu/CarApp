@@ -41,7 +41,7 @@ public class MapDTOToEntity {
 		return motoListResponse.stream().map(MapDTOToEntity::mapMotoToEntity).collect(Collectors.toList());
 	}
 
-	public static Moto mapMotoToEntity(MotoDTO motoDTO){
+	public static Moto mapMotoToEntity(MotoDTO motoDTO) {
 		Moto moto;
 		moto = new Moto();
 		moto.setId(motoDTO.getId());
@@ -63,7 +63,7 @@ public class MapDTOToEntity {
 		return brandListResponse.stream().map(MapDTOToEntity::mapBrandToEntity).collect(Collectors.toList());
 	}
 
-	public static Brand mapBrandToEntity(BrandDTO brandResponse){
+	public static Brand mapBrandToEntity(BrandDTO brandResponse) {
 		Brand brand;
 		brand = new Brand();
 		brand.setId(brandResponse.getId());

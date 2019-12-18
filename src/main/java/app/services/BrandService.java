@@ -53,8 +53,7 @@ public class BrandService {
 		if (brand == null || brand.getName() == null || brand.getCountry() == null) {
 			throw new DataNotFoundException("Not found");
 		}
-		BrandDTO brandDTO = MapEntityToDTO.mapBrandToResponse(brand);
-		return brandDTO;
+		return MapEntityToDTO.mapBrandToResponse(brand);
 	}
 
 	public BrandDTO putBrand(long id, BrandDTO brandDTO) throws ParseException {
@@ -67,8 +66,7 @@ public class BrandService {
 			if (brandDTO == null || brandDTO.getName() == null || brandDTO.getCountry() == null) {
 				throw new EmptyBodyException("Body was empty.");
 			}
-			BrandDTO newBrandDTO = MapEntityToDTO.mapBrandToResponse(jpa.putEntity(oldBrand));
-			return newBrandDTO;
+			return MapEntityToDTO.mapBrandToResponse(jpa.putEntity(oldBrand));
 		}
 	}
 

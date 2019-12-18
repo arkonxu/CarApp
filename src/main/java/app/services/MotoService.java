@@ -53,8 +53,7 @@ public class MotoService {
 		if (moto == null || moto.getBrand() == null || moto.getCountry() == null) {
 			throw new DataNotFoundException("Not found");
 		}
-		MotoDTO motoDTO = MapEntityToDTO.mapMotoToResponse(moto);
-		return motoDTO;
+		return MapEntityToDTO.mapMotoToResponse(moto);
 	}
 
 	public MotoDTO putMoto(long id, MotoDTO motoDTO) {
@@ -67,8 +66,7 @@ public class MotoService {
 			if (motoDTO == null || motoDTO.getBrand() == null || motoDTO.getCountry() == null) {
 				throw new EmptyBodyException("Body was empty.");
 			}
-			MotoDTO newMoto = MapEntityToDTO.mapMotoToResponse(jpa.putEntity(oldMoto));
-			return newMoto;
+			return MapEntityToDTO.mapMotoToResponse(jpa.putEntity(oldMoto));
 		}
 	}
 

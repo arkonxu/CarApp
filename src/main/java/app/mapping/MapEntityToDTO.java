@@ -1,7 +1,6 @@
 package app.mapping;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,9 +30,7 @@ public class MapEntityToDTO {
 	}
 
 	public static List<MotoDTO> mapMotoToResponseList(List<Moto> motoList) {
-		List<MotoDTO> motoDTOList = new ArrayList<>();
-		motoList.stream().map(MapEntityToDTO::mapMotoToResponse).collect(Collectors.toList());
-		return motoDTOList;
+		return motoList.stream().map(MapEntityToDTO::mapMotoToResponse).collect(Collectors.toList());
 	}
 
 	public static MotoDTO mapMotoToResponse(Moto moto) {
